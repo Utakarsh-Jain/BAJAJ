@@ -7,7 +7,7 @@ const testCases = [
     run() {
       const result = processHierarchy(["A->B", "A->C", "B->D"]);
 
-      assert.deepEqual(result.trees, [
+      assert.deepEqual(result.hierarchies, [
         {
           root: "A",
           tree: {
@@ -35,7 +35,6 @@ const testCases = [
 
       assert.deepEqual(result.invalid_entries, ["hello"]);
       assert.deepEqual(result.duplicate_edges, ["A->B"]);
-      assert.deepEqual(result.multi_parent_edges, ["C->B"]);
       assert.equal(result.summary.total_trees, 2);
     }
   },
@@ -44,7 +43,7 @@ const testCases = [
     run() {
       const result = processHierarchy(["A->B", "B->C", "C->A"]);
 
-      assert.deepEqual(result.trees, [
+      assert.deepEqual(result.hierarchies, [
         {
           root: "A",
           has_cycle: true,
@@ -63,7 +62,7 @@ const testCases = [
     run() {
       const result = processHierarchy(["D->E", "E->F", "F->D"]);
 
-      assert.equal(result.trees[0].root, "D");
+      assert.equal(result.hierarchies[0].root, "D");
     }
   },
   {
@@ -72,6 +71,14 @@ const testCases = [
       const result = processHierarchy(["A->B", "C->D"]);
 
       assert.equal(result.summary.largest_tree_root, "A");
+    }
+  },
+  {
+    name: "stores repeated duplicates only once",
+    run() {
+      const result = processHierarchy(["A->B", "A->B", "A->B"]);
+
+      assert.deepEqual(result.duplicate_edges, ["A->B"]);
     }
   },
   {

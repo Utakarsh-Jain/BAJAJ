@@ -52,12 +52,11 @@ Request body:
 Response fields:
 
 - `user_id`
-- `email`
-- `roll_number`
-- `trees`
+- `email_id`
+- `college_roll_number`
+- `hierarchies`
 - `invalid_entries`
 - `duplicate_edges`
-- `multi_parent_edges`
 - `summary`
 
 Summary fields:

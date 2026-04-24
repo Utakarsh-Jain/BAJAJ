@@ -15,10 +15,8 @@ const insightsContent = document.querySelector("#insights-content");
 const treeGrid = document.querySelector("#tree-grid");
 const invalidCount = document.querySelector("#invalid-count");
 const duplicateCount = document.querySelector("#duplicate-count");
-const multiParentCount = document.querySelector("#multi-parent-count");
 const invalidList = document.querySelector("#invalid-list");
 const duplicateList = document.querySelector("#duplicate-list");
-const multiParentList = document.querySelector("#multi-parent-list");
 const jsonOutput = document.querySelector("#json-output");
 
 const sampleEdges = [
@@ -71,15 +69,12 @@ function renderIssueList(listElement, values) {
 function renderIssues(payload) {
   const invalidEntries = payload.invalid_entries ?? [];
   const duplicateEdges = payload.duplicate_edges ?? [];
-  const multiParentEdges = payload.multi_parent_edges ?? [];
 
   invalidCount.textContent = String(invalidEntries.length);
   duplicateCount.textContent = String(duplicateEdges.length);
-  multiParentCount.textContent = String(multiParentEdges.length);
 
   renderIssueList(invalidList, invalidEntries);
   renderIssueList(duplicateList, duplicateEdges);
-  renderIssueList(multiParentList, multiParentEdges);
 }
 
 function renderTreeCards(trees = []) {
@@ -120,7 +115,7 @@ function showResults(payload) {
   insightsEmpty.classList.add("hidden");
   insightsContent.classList.remove("hidden");
   renderSummary(payload.summary);
-  renderTreeCards(payload.trees);
+  renderTreeCards(payload.hierarchies);
   renderIssues(payload);
   jsonOutput.textContent = JSON.stringify(payload, null, 2);
 }
@@ -154,8 +149,14 @@ async function submitHierarchy(event) {
       },
       body: JSON.stringify({ data })
     });
+    const responseText = await response.text();
+    let payload;
 
-    const payload = await response.json();
+    try {
+      payload = responseText ? JSON.parse(responseText) : {};
+    } catch {
+      throw new Error("The API returned HTML or invalid JSON. Check the deployed /bfhl route.");
+    }
 
     if (!response.ok) {
       throw new Error(payload.error || "The API request failed.");
@@ -176,8 +177,7 @@ async function submitHierarchy(event) {
     `;
     renderIssues({
       invalid_entries: [],
-      duplicate_edges: [],
-      multi_parent_edges: []
+      duplicate_edges: []
     });
     setStatus("error", "The API could not be reached or returned an invalid response.");
   } finally {

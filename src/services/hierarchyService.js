@@ -123,6 +123,7 @@ function collectComponents(nodeMap) {
 function parseEdges(data) {
   const invalidEntries = [];
   const duplicateEdges = [];
+  const duplicateEdgeSet = new Set();
   const multiParentEdges = [];
   const seenEdges = new Set();
   const parentByChild = new Map();
@@ -138,7 +139,10 @@ function parseEdges(data) {
     }
 
     if (seenEdges.has(entry)) {
-      duplicateEdges.push(entry);
+      if (!duplicateEdgeSet.has(entry)) {
+        duplicateEdges.push(entry);
+        duplicateEdgeSet.add(entry);
+      }
       continue;
     }
 
@@ -238,10 +242,9 @@ export function processHierarchy(data) {
   const trees = buildTreeGroups(nodeMap);
 
   return {
-    trees,
+    hierarchies: trees,
     invalid_entries: invalidEntries,
     duplicate_edges: duplicateEdges,
-    multi_parent_edges: multiParentEdges,
     summary: createSummary(trees)
   };
 }

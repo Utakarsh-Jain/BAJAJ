@@ -6,11 +6,11 @@ const cases = [
     data: ["A->B", "A->C", "B->D"],
     assert(payload) {
       assert.equal(payload.user_id, "utakarshjain_24042026");
-      assert.equal(payload.email, "uj9789@srmist.edu.in");
-      assert.equal(payload.roll_number, "RA2311030010054");
+      assert.equal(payload.email_id, "uj9789@srmist.edu.in");
+      assert.equal(payload.college_roll_number, "RA2311030010054");
       assert.equal(payload.summary.total_trees, 1);
       assert.equal(payload.summary.total_cycles, 0);
-      assert.equal(payload.trees[0].depth, 3);
+      assert.equal(payload.hierarchies[0].depth, 3);
     }
   },
   {
@@ -19,7 +19,6 @@ const cases = [
     assert(payload) {
       assert.deepEqual(payload.invalid_entries, ["hello"]);
       assert.deepEqual(payload.duplicate_edges, ["A->B"]);
-      assert.deepEqual(payload.multi_parent_edges, ["C->B"]);
     }
   },
   {
@@ -27,8 +26,8 @@ const cases = [
     data: ["A->B", "B->C", "C->A"],
     assert(payload) {
       assert.equal(payload.summary.total_cycles, 1);
-      assert.equal(payload.trees[0].has_cycle, true);
-      assert.deepEqual(payload.trees[0].tree, {});
+      assert.equal(payload.hierarchies[0].has_cycle, true);
+      assert.deepEqual(payload.hierarchies[0].tree, {});
     }
   }
 ];
