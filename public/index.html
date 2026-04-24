@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRM Hierarchy Processor</title>
+    <meta
+      name="description"
+      content="Single-page interface for the SRM Full Stack Engineering Challenge."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">SRM Full Stack Engineering Challenge</p>
+          <h1>Hierarchy Processor</h1>
+          <p class="hero-text">
+            Validate edge definitions, detect duplicate and cyclic structures, and inspect each
+            accepted tree from one focused workspace.
+          </p>
+        </div>
+
+        <div class="hero-status card">
+          <p class="hero-status-label">API endpoint</p>
+          <div class="endpoint-row">
+            <code>POST /bfhl</code>
+            <span id="status-pill" class="status-pill">Ready</span>
+          </div>
+          <p id="status-text" class="hero-status-text">
+            Enter edges and submit a request to inspect the response.
+          </p>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="composer card">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Input</p>
+              <h2>Edge composer</h2>
+            </div>
+            <div class="input-meta">
+              <span id="edge-count" class="meta-chip">0 edges</span>
+              <span class="meta-chip">Pattern: A-&gt;B</span>
+            </div>
+          </div>
+
+          <div class="helper-grid">
+            <div class="helper-card liquid-panel">
+              <h3>Accepted format</h3>
+              <p>One edge per line or comma-separated. Only single uppercase letters are valid.</p>
+            </div>
+            <div class="helper-card liquid-panel">
+              <h3>Processing rules</h3>
+              <p>First duplicate wins, first parent wins, and pure cycles use the smallest node.</p>
+            </div>
+          </div>
+
+          <form id="hierarchy-form" class="composer-form">
+            <label class="field-label" for="edge-input">Node relationships</label>
+            <textarea
+              id="edge-input"
+              name="edges"
+              spellcheck="false"
+              placeholder="A->B&#10;A->C&#10;B->D"
+            ></textarea>
+
+            <div class="form-actions">
+              <button id="submit-button" class="primary-button" type="submit">Analyze graph</button>
+              <button id="sample-button" class="secondary-button" type="button">Load sample</button>
+              <button id="clear-button" class="ghost-button" type="button">Clear</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="results">
+          <div class="summary-grid">
+            <article class="summary-card card">
+              <p class="summary-label">Valid trees</p>
+              <p id="stat-trees" class="summary-value">0</p>
+            </article>
+            <article class="summary-card card">
+              <p class="summary-label">Cyclic groups</p>
+              <p id="stat-cycles" class="summary-value">0</p>
+            </article>
+            <article class="summary-card card">
+              <p class="summary-label">Largest tree root</p>
+              <p id="stat-root" class="summary-value">-</p>
+            </article>
+          </div>
+
+          <section class="results-panel card">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Analysis</p>
+                <h2>Structured output</h2>
+              </div>
+              <button id="copy-button" class="ghost-button" type="button">Copy JSON</button>
+            </div>
+
+            <div id="insights-empty" class="empty-state">
+              <h3>No analysis yet</h3>
+              <p>Run the processor to view tree cards, rejected edges, and the raw API response.</p>
+            </div>
+
+            <div id="insights-content" class="insights-content hidden">
+              <section class="content-section">
+                <h3 class="panel-title">Detected structures</h3>
+                <div id="tree-grid" class="tree-grid"></div>
+              </section>
+
+              <section class="content-section issues-section">
+                <h3 class="panel-title">Discarded edges</h3>
+                <div class="issues-grid">
+                  <article class="issue-card">
+                    <div class="issue-header">
+                      <h4>Invalid entries</h4>
+                      <span id="invalid-count" class="issue-count">0</span>
+                    </div>
+                    <ul id="invalid-list" class="issue-list liquid-list"></ul>
+                  </article>
+                  <article class="issue-card">
+                    <div class="issue-header">
+                      <h4>Duplicate edges</h4>
+                      <span id="duplicate-count" class="issue-count">0</span>
+                    </div>
+                    <ul id="duplicate-list" class="issue-list liquid-list"></ul>
+                  </article>
+                  <article class="issue-card">
+                    <div class="issue-header">
+                      <h4>Multi-parent edges</h4>
+                      <span id="multi-parent-count" class="issue-count">0</span>
+                    </div>
+                    <ul id="multi-parent-list" class="issue-list liquid-list"></ul>
+                  </article>
+                </div>
+              </section>
+
+              <section class="content-section">
+                <h3 class="panel-title">Raw response</h3>
+                <pre id="json-output" class="json-output"></pre>
+              </section>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
