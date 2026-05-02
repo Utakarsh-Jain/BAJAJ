@@ -30,7 +30,6 @@ Run the unit tests:
 ```bash
 npm test
 ```
-
 Run the API verification script while the server is running:
 
 ```bash
